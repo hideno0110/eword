@@ -1,0 +1,3 @@
+graft eword/templates
+graft eword/static
+include eword/schema.sql

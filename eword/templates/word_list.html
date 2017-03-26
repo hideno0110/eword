@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul class="entries">
+  {% for tag in list %}
+    <li>{{ tag.word }}, {{ tag.key }} , {{ tag.what }}</li>
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em></li>
+  {% endfor %}
+  </ul>
+{% endblock %}

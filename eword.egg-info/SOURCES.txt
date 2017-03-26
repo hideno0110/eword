@@ -1,0 +1,17 @@
+MANIFEST.in
+README
+setup.cfg
+eword/__init__.py
+eword/eword.py
+eword/schema.sql
+eword.egg-info/PKG-INFO
+eword.egg-info/SOURCES.txt
+eword.egg-info/dependency_links.txt
+eword.egg-info/requires.txt
+eword.egg-info/top_level.txt
+eword/static/style.css
+eword/templates/hello.html
+eword/templates/layout.html
+eword/templates/login.html
+eword/templates/show_entries.html
+eword/templates/word_list.html

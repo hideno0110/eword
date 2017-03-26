@@ -1,0 +1,1 @@
+from .eword import app
