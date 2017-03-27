@@ -16,7 +16,7 @@
 
     <!-- Custom CSS -->
     <link href="/static/css/logo-nav.css" rel="stylesheet">
-    <link href="/static/css/sticky-footer" rel="stylesheet">
+    <link href="/static/css/sticky-footer.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,22 +38,22 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/">
-                    <!-- <img src="http://placehold.it/150x50&#38;text=Logo" alt=""> -->
-                    Count Your Words!
+                    <img src="/static/logo.png" height="50" width="150" alt="">
+                    <!-- Count Your Words! -->
                 </a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#">About</a>
-                    </li>
-                    <li>
-                        <a href="#">Services</a>
-                    </li>
-                    <li>
-                        <a href="#">Contact</a>
-                    </li>
+                    <!-- <li> -->
+                    <!--     <a href="#">About</a> -->
+                    <!-- </li> -->
+                    <!-- <li> -->
+                    <!--     <a href="#">Services</a> -->
+                    <!-- </li> -->
+                    <!-- <li> -->
+                    <!--     <a href="#">Contact</a> -->
+                    <!-- </li> -->
                     <li>
                       {% if not session.logged_in %}
                         <a href="{{ url_for('login') }}">log in</a>
@@ -70,9 +70,9 @@
     <!-- Page Content -->
     <div class="container">
         <div class="row">
-            <div class="col-lg-11">
+            <div class="col-lg-11 col-md-offset-1">
                 {% for message in get_flashed_messages() %}
-                  <div class="flash">{{ message }}</div>
+                  <div class="alert alert-success" role="alert">{{ message }}</div>
                 {% endfor %}
                 {% block body %}{% endblock %}
             </div>
