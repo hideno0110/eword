@@ -9,7 +9,12 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 import logging
 from logging.handlers import RotatingFileHandler
 from lib.word import Word
+import requests 
 # import lib.db
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = '/uploads'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 
 # create our little application :)
 app = Flask(__name__)
@@ -26,6 +31,7 @@ app.config.update(dict(
     PASSWORD='default'
 ))
 app.config.from_envvar('EWORD_SETTINGS', silent=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def connect_db():
     """Connects to the specific database."""
@@ -85,26 +91,54 @@ def show_entries():
     return render_template('index.html', entries=entries, words=words)
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @app.route('/add', methods=['POST'])
 def add_entry():
-
-    print('===1start======')
-
+    title = ''
+    text =  ''
+    
+    print('bbbbbbbbbbbaaaaaa')
     if not session.get('logged_in'):
         abort(401)
+    
+    print('xccccccccccccccbbbbbbbbbbbaaaaaa')
+    if request.form:
+        title = request.form['title']
+        text =  request.form['text']
+    
+    print('ddddddddddddddddxccccccccccccccbbbbbbbbbbbaaaaaa')
+    if 'file' in request.files:
+        print('aaaaaa')
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(url_for('show_entries'))
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            print('===selectfile1.5======')
+            print(file)
+            print(filename)
+            print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print('eword/'+ secure_filename(file.filename))
+            file.save('eword/uploads'+ secure_filename(file.filename))
+            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            f = open('eword/uploads'+ secure_filename(file.filename), 'r', encoding='utf_8')
+            text = f.read()
+            f.close()         
+            # print('===selectfile2======')
+    
     try:
-        print('===2start======')
         db = get_db()
-        print('===3start======')
-        print(request.form['title'])
-        print(request.form['text'])
         db.execute('insert into entries (title, text) values (?, ?)',
-                [request.form['title'], request.form['text']])
-        print('===4start======')
+                [title, text])
         
         tagdir = os.getenv('TREETAGGER_ROOT')
         tagger = treetaggerwrapper.TreeTagger(TAGLANG='en',TAGDIR=tagdir)
-        tags = tagger.TagText(request.form['text'])
+        tags = tagger.TagText(text)
         tag_list = []
         print('===start======')
         for tag in tags:

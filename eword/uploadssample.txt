@@ -1,0 +1,8 @@
+be be be be be
+181
+down vote
+favorite
+93
+I want to loop over the contents of a text file and do a search and replace on some lines and write the result back to the file. I could first load the whole file in memory and then write it back, but that probably is not the best way to do it.
+
+What is the best way to do this, within the following code?
