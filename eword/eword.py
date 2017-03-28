@@ -81,14 +81,21 @@ def show_entries():
             order by id desc LIMIT 10')
     word = db.execute('select * from word_lists \
             left join grammer_labels on word_lists.label_id = grammer_labels.id \
-            where grammer_labels.act_flg = 1 \
-            order by counter desc LIMIT 20')
-    
+            where grammer_labels.act_flg = 1 and checked_flg = 0 \
+            order by counter desc LIMIT 10')
+   
+    count = db.execute('select count(id) from word_lists')
+
+
     entries = entry.fetchall()
     words = word.fetchall()
+    count = count.fetchone()
+    count = count[0]
+    print('count')
+    print(count)
     app.logger.warning(words)
     
-    return render_template('index.html', entries=entries, words=words)
+    return render_template('index.html', entries=entries, words=word, count=count)
 
 
 def allowed_file(filename):
@@ -101,16 +108,13 @@ def add_entry():
     title = ''
     text =  ''
     
-    print('bbbbbbbbbbbaaaaaa')
     if not session.get('logged_in'):
         abort(401)
     
-    print('xccccccccccccccbbbbbbbbbbbaaaaaa')
     if request.form:
         title = request.form['title']
         text =  request.form['text']
     
-    print('ddddddddddddddddxccccccccccccccbbbbbbbbbbbaaaaaa')
     if 'file' in request.files:
         print('aaaaaa')
         file = request.files['file']
@@ -135,7 +139,10 @@ def add_entry():
         db = get_db()
         db.execute('insert into entries (title, text) values (?, ?)',
                 [title, text])
-        
+        post_id = db.execute('select id from entries ORDER BY id DESC limit 1').fetchone()
+        print('-----------post_id')
+        print(post_id[0])
+        post_id = post_id[0]
         tagdir = os.getenv('TREETAGGER_ROOT')
         tagger = treetaggerwrapper.TreeTagger(TAGLANG='en',TAGDIR=tagdir)
         tags = tagger.TagText(text)
@@ -154,7 +161,7 @@ def add_entry():
                 label_id_int = 0
             print('=label2========')
             print(label_id_int)
-            db.execute('INSERT OR IGNORE INTO word_lists (lemma, label_id, counter, word) VALUES (?, ?, ?, ?)',[word.lemma, label_id_int, word.word, 0])
+            db.execute('INSERT OR IGNORE INTO word_lists (lemma, label_id, counter, word, checked_flg, post_id) VALUES (?, ?, ?, ?, ?, ?)',[word.lemma, label_id_int, word.word, 0, 0, post_id])
             print('=label3========')
             db.execute('UPDATE word_lists SET counter = counter + 1 WHERE lemma LIKE ?',[word.lemma])
         
@@ -178,12 +185,27 @@ def show_entry(id):
     entry = db.execute('select id, title, text from entries where id = ?',[id])    
     # entry = db.execute('select id, title, text from entries where id = 2') 
     entry = entry.fetchone() 
+
+    words = db.execute('select * from word_lists \
+            left join grammer_labels on word_lists.label_id = grammer_labels.id \
+            where grammer_labels.act_flg = 1 and checked_flg = 0 and post_id = ? \
+            order by counter desc LIMIT 10',[id]).fetchall()
     # entry['text'] = entry['text'].replace('\n','<br />\n')
     print('-----------entr')
     # print(entry.text)
-    return render_template('entry.html', entry=entry)
+    return render_template('entry.html', entry=entry, words=words)
     
+@app.route('/checked', methods=['POST'])
+def checked():
+    word_id = request.form['checked']
+    print('-----------word_id')
+    print(word_id)
+
+    db = get_db()
+    entry = db.execute('update word_lists set checked_flg = 1 where id = ?',[word_id])    
     
+    db.commit()
+    return redirect(url_for('show_entries'))
 '''
 Login & Logout
 '''

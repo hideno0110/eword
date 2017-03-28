@@ -2,9 +2,38 @@
 {% block body %}
   {% if session.logged_in %}
   
-    <h2>{{ entry.id }} : {{ entry.title }}</h2>
+  <div class="col-lg-7">
+    <h2>{{ entry.id }} : {{ entry.title }}</h6>
     
     <p>{{ entry.text }}</p>
+  
+  </div>
+    
+  <div class="col-lg-4">
+    <h2>Practice Words :</h2>
+    <table class="table">
+      <tr>
+        <th>lemma</th>
+        <th>times</th>
+        <th>label</th>
+        <th>checked</th>
+      </tr>
+      {% for word in words %}
+        <tr>
+          <td><a href ="http://ejje.weblio.jp/content/{{ word.lemma }}" target="_blank">{{ word.lemma }}</a></td>
+          <td>{{ word.counter }}</td>
+          <td>{{ word.label }}</td>
+          <td>
+            <form action="{{ url_for('checked') }}" method="post">
+              <button type="submit" class="btn btn-warning btn-sm" name="checked" value={{ word.id }}>OK!</button>
+            </form> 
+          </td>
+        </tr>
+      {% else %}
+        <li><em>Unbelievable.  No entries here so far</em></li>
+      {% endfor %}
+    </table>
+  </div>  
   {% endif %}
 
 {% endblock %}

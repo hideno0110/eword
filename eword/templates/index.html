@@ -31,6 +31,26 @@
   
   
   <div class="col-lg-4">
+    <h2>Total Words :</h2>
+    <p>{{ count  }}</p>
+    <h2>Practice Words :</h2>
+    <table class="table">
+      <tr>
+        <th>lemma</th>
+        <th>times</th>
+        <th>label</th>
+      </tr>
+      {% for word in words %}
+        <tr>
+          <td><a href ="http://ejje.weblio.jp/content/{{ word.lemma }}" target="_blank">{{ word.lemma }}</a></td>
+          <td>{{ word.counter }}</td>
+          <td>{{ word.label }}</td>
+        </tr>
+      {% else %}
+        <li><em>Unbelievable.  No entries here so far</em></li>
+      {% endfor %}
+    </table>
+
     <h2>Articles :</h2>
     <ul class="entries">
     {% for entry in entries %}
@@ -40,23 +60,8 @@
     {% endfor %}
     </ul>
     
-    <h2>Words :</h2>
-    <table class="table">
-      <tr>
-        <th>lemma</th>
-        <th>times</th>
-        <th>label</th>
-      </tr>
-      {% for word in words %}
-        <tr>
-          <td>{{ word.lemma }}</td>
-          <td>{{ word.counter }}</td>
-          <td>{{ word.label }}</td>
-        </tr>
-      {% else %}
-        <li><em>Unbelievable.  No entries here so far</em></li>
-      {% endfor %}
-    </table>
+
+
   </div>
   {% endif %}
 {% endblock %}

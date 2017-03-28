@@ -13,6 +13,7 @@ create table word_lists (
   label_id integer,
   counter integer,
   post_id integer,
+  checked_flg integer,
   user_id integer
 );
 
@@ -44,8 +45,8 @@ insert into grammer_labels (id, label, name, ex, act_flg) values (15,"NP", "prop
 insert into grammer_labels (id, label, name, ex, act_flg) values (16,"NPS", "proper noun, plural", "Vikings",1);
 insert into grammer_labels (id, label, name, ex, act_flg) values (17,"PDT", "predeterminer", "both the boys",1);
 insert into grammer_labels (id, label, name, ex, act_flg) values (18,"POS", "possessive ending", "friend's",0);
-insert into grammer_labels (id, label, name, ex, act_flg) values (19,"PP", "personal pronoun", "I, he, it",1);
-insert into grammer_labels (id, label, name, ex, act_flg) values (20,"PP$", "possessive pronoun", "my, his",1);
+insert into grammer_labels (id, label, name, ex, act_flg) values (19,"PP", "personal pronoun", "I, he, it",0);
+insert into grammer_labels (id, label, name, ex, act_flg) values (20,"PP$", "possessive pronoun", "my, his",0);
 insert into grammer_labels (id, label, name, ex, act_flg) values (21,"RB", "adverb", "however, usually, here, not",1);
 insert into grammer_labels (id, label, name, ex, act_flg) values (22,"RBR", "adverb, comparative", "better",1);
 insert into grammer_labels (id, label, name, ex, act_flg) values (23,"RBS", "adverb, superlative", "best",1);
@@ -54,7 +55,7 @@ insert into grammer_labels (id, label, name, ex, act_flg) values (25,"SENT", "en
 insert into grammer_labels (id, label, name, ex, act_flg) values (26,"SYM", "symbol", "@, +, *, ^, |, =",0);
 insert into grammer_labels (id, label, name, ex, act_flg) values (27,"TO", "to", "to go, to him",0);
 insert into grammer_labels (id, label, name, ex, act_flg) values (28,"UH", "interjection", "uhhuhhuhh",1);
-insert into grammer_labels (id, label, name, ex, act_flg) values (29,"VB", "verb be, base form", "be",1);
+insert into grammer_labels (id, label, name, ex, act_flg) values (29,"VB", "verb be, base form", "be",0);
 insert into grammer_labels (id, label, name, ex, act_flg) values (30,"VBD", "verb be, past", "was|were",1);
 insert into grammer_labels (id, label, name, ex, act_flg) values (31,"VBG", "verb be, gerund/participle", "being",1);
 insert into grammer_labels (id, label, name, ex, act_flg) values (32,"VBN", "verb be, past participle", "been",1);
