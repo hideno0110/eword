@@ -45,6 +45,9 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                    <li>
+                        <a href="{{ url_for('words') }}">Words List</a>
+                    </li>                   
                     <!-- <li> -->
                     <!--     <a href="#">About</a> -->
                     <!-- </li> -->
@@ -71,10 +74,19 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-11 col-md-offset-1">
-                {% for message in get_flashed_messages() %}
-                  <div class="alert alert-success" role="alert">{{ message }}</div>
-                {% endfor %}
-                {% block body %}{% endblock %}
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    {% if category == "error" %}
+                      <div class="alert alert-danger" role="alert">{{ message }}</div>
+                    {% else %}
+                      <div class="alert alert-success" role="alert">{{ message }}</div>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}             
+              <!-- contents  -->
+              {% block body %}{% endblock %}
             </div>
         </div>
     </div>

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+  
+  <div class="col-lg-7">
+    <h2>Words List</h2>
+    <table class="table">
+      <tr>
+        <th>lemma</th>
+        <th>times</th>
+        <th>label</th>
+        <th>checked</th>
+        <th>active</th>
+      </tr>
+      {% for word in words %}
+        <tr>
+          <td><a href ="http://ejje.weblio.jp/content/{{ word.lemma }}" target="_blank">{{ word.lemma }}</a></td>
+          <td>{{ word.counter }}</td>
+          <td>{{ word.label }}</td>
+          <td>
+            {% if word.checked_flg == 0  %}
+              <form action="{{ url_for('checked') }}" method="post">
+                <input type="hidden" name="check" value="1">
+                <button type="submit" class="btn btn-warning btn-sm" name="checked" value={{ word.id }}>OK!</button>
+              </form> 
+            {% else %}
+              <form action="{{ url_for('checked') }}" method="post">
+                <input type="hidden" name="check" value="0">
+                <button type="submit" class="btn btn-sm" name="checked" value={{ word.id }}>Again!</button>
+              </form> 
+            {% endif %}
+          </td>
+          <td>
+            {% if word.act_flg == 1 %}
+              active
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <li><em>Unbelievable.  No entries here so far</em></li>
+      {% endfor %}
+    </table>
+  </div>  
+  {% endif %}
+
+{% endblock %}

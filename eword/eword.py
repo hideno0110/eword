@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append('/Users/ooharahidenori/app/eword/eword/')
+sys.path.append('eword/')
 import treetaggerwrapper
 import os
 from sqlite3 import dbapi2 as sqlite3
@@ -95,7 +95,7 @@ def show_entries():
     print(count)
     app.logger.warning(words)
     
-    return render_template('index.html', entries=entries, words=word, count=count)
+    return render_template('index.html', entries=entries, words=words, count=count)
 
 
 def allowed_file(filename):
@@ -119,7 +119,7 @@ def add_entry():
         print('aaaaaa')
         file = request.files['file']
         if file.filename == '':
-            flash('No selected file')
+            flash('No selected file', 'error')
             return redirect(url_for('show_entries'))
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -166,46 +166,57 @@ def add_entry():
             db.execute('UPDATE word_lists SET counter = counter + 1 WHERE lemma LIKE ?',[word.lemma])
         
         db.commit()
-        flash('New entry was successfully posted')
+        flash('New entry was successfully posted', 'success')
     except:
         app.logger.warning('db error')
-        flash('Entry was not success.')
+        flash('Entry was not success.', 'error')
 
     return redirect(url_for('show_entries'))
+
+
+@app.route('/words')
+def words():
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    words = db.execute('select * from word_lists left join grammer_labels on word_lists.label_id = grammer_labels.id  order by counter desc')    
+    words = words.fetchall() 
+    
+    return render_template('words.html', words=words)
 
 
 @app.route('/entry/<int:id>')
 def show_entry(id):
     if not session.get('logged_in'):
         abort(401)
-
-    print('-----------id')
-    print(id)
     db = get_db()
     entry = db.execute('select id, title, text from entries where id = ?',[id])    
-    # entry = db.execute('select id, title, text from entries where id = 2') 
     entry = entry.fetchone() 
 
     words = db.execute('select * from word_lists \
             left join grammer_labels on word_lists.label_id = grammer_labels.id \
             where grammer_labels.act_flg = 1 and checked_flg = 0 and post_id = ? \
             order by counter desc LIMIT 10',[id]).fetchall()
-    # entry['text'] = entry['text'].replace('\n','<br />\n')
-    print('-----------entr')
-    # print(entry.text)
+    
     return render_template('entry.html', entry=entry, words=words)
     
 @app.route('/checked', methods=['POST'])
 def checked():
     word_id = request.form['checked']
-    print('-----------word_id')
     print(word_id)
+    print(request.form['check'])
 
     db = get_db()
-    entry = db.execute('update word_lists set checked_flg = 1 where id = ?',[word_id])    
+    if request.form['check'] == '1':
+        print('1---')
+        entry = db.execute('update word_lists set checked_flg = ? where id = ?',[1, word_id])    
+    elif  request.form['check'] == '0':
+        print('2---')
+        entry = db.execute('update word_lists set checked_flg = ? where id = ?',[0, word_id])    
     
     db.commit()
-    return redirect(url_for('show_entries'))
+    return redirect(request.referrer)
+
 '''
 Login & Logout
 '''
@@ -219,7 +230,7 @@ def login():
             error = 'Invalid password'
         else:
             session['logged_in'] = True
-            flash('You were logged in')
+            flash('You were logged in', 'success')
             return redirect(url_for('show_entries'))
     return render_template('login.html', error=error)
 
@@ -227,7 +238,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('You were logged out')
+    flash('You were logged out', 'success')
     return redirect(url_for('show_entries'))
 
 
