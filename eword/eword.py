@@ -162,7 +162,7 @@ def add_entry():
                 label_id_int = 0
             print('=label2========')
             print(label_id_int)
-            db.execute('INSERT OR IGNORE INTO word_lists (lemma, label_id, counter, word, checked_flg, post_id) VALUES (?, ?, ?, ?, ?, ?)',[word.lemma, label_id_int, word.word, 0, 0, post_id])
+            db.execute('INSERT OR IGNORE INTO word_lists (lemma, label_id, word,  counter, checked_flg, post_id) VALUES (?, ?, ?, ?, ?, ?)',[word.lemma, label_id_int, word.word, 0, 0, post_id])
             print('=label3========')
             db.execute('UPDATE word_lists SET counter = counter + 1 WHERE lemma LIKE ?',[word.lemma])
         
