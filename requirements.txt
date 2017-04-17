@@ -4,11 +4,10 @@ cf-deployment-tracker==1.0.2
 cffi==1.9.1
 click==6.7
 cloudant==2.4.0
-conda==4.3.11
+conda==4.3.13
 cryptography==1.7.1
 decorator==4.0.11
 entrypoints==0.2.2
--e git+git@github.com:hideno0110/eword.git@a9cceebf93b1491f7500f6321c3fbc167caf827a#egg=eword
 Flask==0.11.1
 Flask-Login==0.4.0
 html5lib==0.999999999
@@ -25,7 +24,6 @@ jupyter-client==5.0.0
 jupyter-console==5.1.0
 jupyter-core==4.3.0
 MarkupSafe==1.0
--e git+git@github.com:hideno0110/eword.git@4bbd218b0da8d1b8a8e6d4f920312f655e1ba2af#egg=minitwit&subdirectory=flask-master/examples/minitwit
 mistune==0.7.4
 nbconvert==5.1.1
 nbformat==4.3.0
